@@ -1,13 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { X, ChevronDown, ChevronUp, Filter, SlidersHorizontal } from "lucide-react";
 import { Category, DevelopmentType } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { categories, developmentTypes } from "@/data/dummy";
-import { getCategoryColor, getDevelopmentTypeColor, formatDevelopmentType } from "@/lib/utils";
+import { CATEGORY_LIST, DEVELOPMENT_TYPES } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
 interface FilterPanelProps {
@@ -80,53 +78,53 @@ export function FilterPanel({
     onFiltersChange({ technologies: newTechs });
   };
 
-  const renderFilterChips = () => {
+  const renderActiveChips = () => {
     const chips: React.ReactNode[] = [];
 
     filters.categories.forEach((cat) => {
       chips.push(
-        <Badge key={`cat-${cat}`} variant="category" className={cn(getCategoryColor(cat), "cursor-pointer")} onClick={() => handleCategoryToggle(cat)}>
-          {cat} <X className="h-3 w-3 ml-1" />
+        <Badge key={`cat-${cat}`} variant="outline" className={cn("cursor-pointer")} onClick={() => handleCategoryToggle(cat)}>
+          {cat} <span className="ml-1">✕</span>
         </Badge>
       );
     });
 
     filters.developmentTypes.forEach((dt) => {
       chips.push(
-        <Badge key={`dt-${dt}`} variant="development" className={cn(getDevelopmentTypeColor(dt), "cursor-pointer")} onClick={() => handleDevTypeToggle(dt)}>
-          {formatDevelopmentType(dt)} <X className="h-3 w-3 ml-1" />
+        <Badge key={`dt-${dt}`} variant="outline" className={cn("cursor-pointer")} onClick={() => handleDevTypeToggle(dt)}>
+          {dt.replace(/_/g, " ").toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())} <span className="ml-1">✕</span>
         </Badge>
       );
     });
 
     filters.organizations.forEach((org) => {
       chips.push(
-        <Badge key={`org-${org}`} variant="tag" className={cn("cursor-pointer")} onClick={() => handleOrganizationToggle(org)}>
-          {org} <X className="h-3 w-3 ml-1" />
+        <Badge key={`org-${org}`} variant="outline" className={cn("cursor-pointer")} onClick={() => handleOrganizationToggle(org)}>
+          {org} <span className="ml-1">✕</span>
         </Badge>
       );
     });
 
     filters.technologies.forEach((tech) => {
       chips.push(
-        <Badge key={`tech-${tech}`} variant="tag" className={cn("cursor-pointer")} onClick={() => handleTechnologyToggle(tech)}>
-          {tech} <X className="h-3 w-3 ml-1" />
+        <Badge key={`tech-${tech}`} variant="outline" className={cn("cursor-pointer")} onClick={() => handleTechnologyToggle(tech)}>
+          {tech} <span className="ml-1">✕</span>
         </Badge>
       );
     });
 
     if (filters.dateFrom) {
       chips.push(
-        <Badge key="date-from" variant="tag" className={cn("cursor-pointer")} onClick={() => onFiltersChange({ dateFrom: null })}>
-          From: {filters.dateFrom} <X className="h-3 w-3 ml-1" />
+        <Badge key="date-from" variant="outline" className={cn("cursor-pointer")} onClick={() => onFiltersChange({ dateFrom: null })}>
+          From: {filters.dateFrom} <span className="ml-1">✕</span>
         </Badge>
       );
     }
 
     if (filters.dateTo) {
       chips.push(
-        <Badge key="date-to" variant="tag" className={cn("cursor-pointer")} onClick={() => onFiltersChange({ dateTo: null })}>
-          To: {filters.dateTo} <X className="h-3 w-3 ml-1" />
+        <Badge key="date-to" variant="outline" className={cn("cursor-pointer")} onClick={() => onFiltersChange({ dateTo: null })}>
+          To: {filters.dateTo} <span className="ml-1">✕</span>
         </Badge>
       );
     }
@@ -135,16 +133,12 @@ export function FilterPanel({
   };
 
   return (
-    <aside className={cn("lg:w-72 flex-shrink-0", className)}>
-      <div className="sticky top-24 space-y-4">
+    <aside className={cn("lg:w-[255px] flex-shrink-0", className)}>
+      <div className="sticky top-[88px] space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="font-mono text-[11px] uppercase tracking-[0.15em] text-cream-30 flex items-center gap-2">
-            <SlidersHorizontal className="h-4 w-4" />
-            Filters
-          </h2>
+          <h2 className="font-semibold text-[13px] uppercase tracking-[0.15em] text-text-secondary">Filters</h2>
           {hasActiveFilters && (
-            <Button variant="ghost" size="sm" onClick={onClearAll} className="text-cream-40 hover:text-royal-400">
-              <X className="h-3.5 w-3.5 mr-1" />
+            <Button variant="ghost" size="sm" onClick={onClearAll} className="text-text-secondary hover:text-text-primary">
               Clear all
             </Button>
           )}
@@ -152,7 +146,7 @@ export function FilterPanel({
 
         {hasActiveFilters && (
           <div className="flex flex-wrap gap-1.5">
-            {renderFilterChips()}
+            {renderActiveChips()}
           </div>
         )}
 
@@ -165,7 +159,6 @@ export function FilterPanel({
 
         <FilterSection
           title="Categories"
-          icon={Filter}
           open={openSections.categories}
           onToggle={() => toggleSection("categories")}
           count={facets.categories.reduce((sum, c) => sum + c.count, 0)}
@@ -177,13 +170,11 @@ export function FilterPanel({
                   type="checkbox"
                   checked={filters.categories.includes(name)}
                   onChange={() => handleCategoryToggle(name)}
-                  className="w-4 h-4 rounded border-cream-0/20 bg-charcoal-800 text-royal-500 focus:ring-royal-500 focus:ring-1 transition-colors"
+                  className="w-4 h-4 rounded border-border bg-bg-raised text-accent focus:ring-accent focus:ring-1 transition-colors"
                 />
                 <div className="flex-1 flex items-center justify-between">
-                  <Badge variant="category" className={cn(getCategoryColor(name), "pointer-events-none")} size="sm">
-                    {name}
-                  </Badge>
-                  <span className="font-mono text-[10px] text-cream-45 group-hover:text-cream-30">{count}</span>
+                  <span className="text-text-primary group-hover:text-accent transition-colors text-sm">{name}</span>
+                  <span className="font-sans text-[10px] text-text-muted group-hover:text-text-secondary">{count}</span>
                 </div>
               </label>
             ))}
@@ -192,7 +183,6 @@ export function FilterPanel({
 
         <FilterSection
           title="Development Types"
-          icon={Zap}
           open={openSections.developmentTypes}
           onToggle={() => toggleSection("developmentTypes")}
           count={facets.developmentTypes.reduce((sum, d) => sum + d.count, 0)}
@@ -204,13 +194,13 @@ export function FilterPanel({
                   type="checkbox"
                   checked={filters.developmentTypes.includes(name)}
                   onChange={() => handleDevTypeToggle(name)}
-                  className="w-4 h-4 rounded border-cream-0/20 bg-charcoal-800 text-royal-500 focus:ring-royal-500 focus:ring-1 transition-colors"
+                  className="w-4 h-4 rounded border-border bg-bg-raised text-accent focus:ring-accent focus:ring-1 transition-colors"
                 />
                 <div className="flex-1 flex items-center justify-between">
-                  <Badge variant="development" className={cn(getDevelopmentTypeColor(name), "pointer-events-none")} size="sm">
-                    {formatDevelopmentType(name)}
-                  </Badge>
-                  <span className="font-mono text-[10px] text-cream-45 group-hover:text-cream-30">{count}</span>
+                  <span className="text-text-primary group-hover:text-accent transition-colors text-sm capitalize">
+                    {name.replace(/_/g, " ").toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}
+                  </span>
+                  <span className="font-sans text-[10px] text-text-muted group-hover:text-text-secondary">{count}</span>
                 </div>
               </label>
             ))}
@@ -219,7 +209,6 @@ export function FilterPanel({
 
         <FilterSection
           title="Organizations"
-          icon={Building2}
           open={openSections.organizations}
           onToggle={() => toggleSection("organizations")}
           count={facets.organizations.reduce((sum, o) => sum + o.count, 0)}
@@ -231,14 +220,14 @@ export function FilterPanel({
                   type="checkbox"
                   checked={filters.organizations.includes(name)}
                   onChange={() => handleOrganizationToggle(name)}
-                  className="w-4 h-4 rounded border-cream-0/20 bg-charcoal-800 text-royal-500 focus:ring-royal-500 focus:ring-1 transition-colors"
+                  className="w-4 h-4 rounded border-border bg-bg-raised text-accent focus:ring-accent focus:ring-1 transition-colors"
                 />
-                <span className="text-cream-10 group-hover:text-royal-400 transition-colors text-sm">{name}</span>
-                <span className="font-mono text-[10px] text-cream-45 ml-auto">{count}</span>
+                <span className="text-text-primary group-hover:text-accent transition-colors text-sm">{name}</span>
+                <span className="font-sans text-[10px] text-text-muted ml-auto">{count}</span>
               </label>
             ))}
             {facets.organizations.length > 15 && (
-              <Button variant="ghost" size="sm" className="w-full justify-start text-cream-40 hover:text-royal-400 px-0">
+              <Button variant="ghost" size="sm" className="w-full justify-start text-text-secondary hover:text-text-primary px-0">
                 Show {facets.organizations.length - 15} more
               </Button>
             )}
@@ -247,7 +236,6 @@ export function FilterPanel({
 
         <FilterSection
           title="Technologies"
-          icon={Tag}
           open={openSections.technologies}
           onToggle={() => toggleSection("technologies")}
           count={facets.technologies.reduce((sum, t) => sum + t.count, 0)}
@@ -259,14 +247,14 @@ export function FilterPanel({
                   type="checkbox"
                   checked={filters.technologies.includes(name)}
                   onChange={() => handleTechnologyToggle(name)}
-                  className="w-4 h-4 rounded border-cream-0/20 bg-charcoal-800 text-royal-500 focus:ring-royal-500 focus:ring-1 transition-colors"
+                  className="w-4 h-4 rounded border-border bg-bg-raised text-accent focus:ring-accent focus:ring-1 transition-colors"
                 />
-                <span className="text-cream-10 group-hover:text-royal-400 transition-colors text-sm">{name}</span>
-                <span className="font-mono text-[10px] text-cream-45 ml-auto">{count}</span>
+                <span className="text-text-primary group-hover:text-accent transition-colors text-sm">{name}</span>
+                <span className="font-sans text-[10px] text-text-muted ml-auto">{count}</span>
               </label>
             ))}
             {facets.technologies.length > 15 && (
-              <Button variant="ghost" size="sm" className="w-full justify-start text-cream-40 hover:text-royal-400 px-0">
+              <Button variant="ghost" size="sm" className="w-full justify-start text-text-secondary hover:text-text-primary px-0">
                 Show {facets.technologies.length - 15} more
               </Button>
             )}
@@ -275,7 +263,6 @@ export function FilterPanel({
 
         <FilterSection
           title="Date Range"
-          icon={Clock}
           open={openSections.dates}
           onToggle={() => toggleSection("dates")}
         >
@@ -299,35 +286,31 @@ export function FilterPanel({
   );
 }
 
-import { Zap, Building2, Tag, Clock, LucideIcon } from "lucide-react";
-
 interface FilterSectionProps {
   title: string;
-  icon: LucideIcon;
   open: boolean;
   onToggle: () => void;
   count?: number;
   children: React.ReactNode;
 }
 
-function FilterSection({ title, icon: Icon, open, onToggle, count, children }: FilterSectionProps) {
+function FilterSection({ title, open, onToggle, count, children }: FilterSectionProps) {
   return (
-    <div className="bg-charcoal-800/50 border border-cream-0/10 rounded-xl overflow-hidden">
+    <div className="bg-bg-elevated border border-border rounded-lg overflow-hidden">
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex items-center justify-between gap-3 p-4 text-left transition-colors hover:bg-charcoal-800"
+        className="w-full flex items-center justify-between gap-3 p-3 text-left transition-colors hover:bg-bg-raised"
       >
         <div className="flex items-center gap-2">
-          <span className="text-cream-40"><Icon className="h-5 w-5" /></span>
-          <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-cream-20">{title}</span>
+          <span className="font-semibold text-[11px] uppercase tracking-[0.15em] text-text-secondary">{title}</span>
           {count !== undefined && (
-            <span className="font-mono text-[10px] text-cream-45 bg-charcoal-700 px-2 py-0.5 rounded">{count}</span>
+            <span className="font-sans text-[10px] text-text-muted bg-bg-raised px-2 py-0.5 rounded">{count}</span>
           )}
         </div>
-        {open ? <ChevronUp className="h-4 w-4 text-cream-40" /> : <ChevronDown className="h-4 w-4 text-cream-40" />}
+        <span className="text-text-muted">{open ? "▲" : "▼"}</span>
       </button>
-      {open && <div className="px-4 pb-4 border-t border-cream-0/10">{children}</div>}
+      {open && <div className="px-3 pb-3 border-t border-border">{children}</div>}
     </div>
   );
 }

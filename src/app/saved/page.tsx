@@ -176,7 +176,6 @@ export default function SavedPage() {
 
                   <ArticleGrid
                     articles={filteredArticles}
-                    variant="default"
                     onSaveToggle={handleSaveToggle}
                     savedArticles={savedArticleIds}
                   />

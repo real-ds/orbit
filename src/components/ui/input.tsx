@@ -16,7 +16,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full">
         {label && (
-          <label htmlFor={inputId} className="block text-[11px] font-medium text-cream-40 mb-1.5">
+          <label htmlFor={inputId} className="block text-[11px] font-medium text-text-secondary mb-1.5">
             {label}
           </label>
         )}
@@ -24,8 +24,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           id={inputId}
           className={cn(
-            "w-full bg-charcoal-800 border border-cream-0/10 rounded-xl px-4 py-2.5 text-cream-10 placeholder:text-cream-40",
-            "focus:outline-none focus:border-royal-500 focus:ring-1 focus:ring-royal-500",
+            "w-full bg-bg-raised border border-border rounded-xl px-4 py-2.5 text-text-primary placeholder:text-text-muted",
+            "focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent",
             "disabled:opacity-50 disabled:cursor-not-allowed",
             "transition-colors duration-200",
             error && "border-red-500 focus:border-red-500 focus:ring-red-500",
@@ -36,12 +36,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
         {error && (
-          <p id={`${inputId}-error`} className="mt-1.5 text-[11px] text-red-400" role="alert">
+          <p id={`${inputId}-error`} className="mt-1.5 text-[11px] text-red-500" role="alert">
             {error}
           </p>
         )}
         {hint && !error && (
-          <p id={`${inputId}-hint`} className="mt-1.5 text-[11px] text-cream-45">
+          <p id={`${inputId}-hint`} className="mt-1.5 text-[11px] text-text-muted">
             {hint}
           </p>
         )}

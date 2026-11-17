@@ -1,16 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
+import { Navbar } from "@/components/layout/Navbar";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
-  display: "swap",
-});
-
-const jetBrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-jetbrains-mono",
   display: "swap",
 });
 
@@ -55,7 +50,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#090a08",
+  themeColor: "#0B0D0C",
   colorScheme: "dark",
   width: "device-width",
   initialScale: 1,
@@ -63,13 +58,16 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetBrainsMono.variable}`}>
+    <html lang="en" className={inter.variable}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body className="font-sans antialiased bg-charcoal-900 text-cream-10 min-h-screen flex flex-col">
-        {children}
+      <body suppressHydrationWarning className="font-sans antialiased bg-bg text-text-primary min-h-screen">
+        <Navbar />
+        <main style={{ paddingTop: "72px" }}>
+          {children}
+        </main>
       </body>
     </html>
   );

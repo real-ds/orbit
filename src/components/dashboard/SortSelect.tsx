@@ -1,6 +1,7 @@
 "use client";
 
 import { Select } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 interface SortSelectProps {
   value: "newest" | "oldest" | "relevance";
@@ -25,5 +26,3 @@ export function SortSelect({ value, onChange, className = "" }: SortSelectProps)
     />
   );
 }
-
-import { cn } from "@/lib/utils";

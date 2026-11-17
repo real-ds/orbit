@@ -4,7 +4,7 @@ import { forwardRef, HTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
-  variant?: "default" | "category" | "development" | "tag" | "outline" | "dot";
+  variant?: "default" | "outline" | "dot";
   color?: string;
   size?: "sm" | "md" | "lg";
   dotColor?: string;
@@ -15,12 +15,9 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
     const baseStyles = "inline-flex items-center font-medium transition-colors";
 
     const variants = {
-      default: "bg-charcoal-700 text-cream-10 border border-cream-0/10",
-      category: "bg-charcoal-700 text-cream-10 border border-cream-0/10",
-      development: "bg-charcoal-700 text-cream-10 border border-cream-0/10",
-      tag: "bg-charcoal-700 text-cream-10 border border-cream-0/10",
-      outline: "bg-transparent text-cream-10 border border-cream-0/20",
-      dot: "bg-transparent text-cream-10 border-none px-0",
+      default: "bg-bg-raised text-text-primary border border-border",
+      outline: "bg-transparent text-text-primary border border-border",
+      dot: "bg-transparent text-text-primary border-none px-0",
     };
 
     const sizes = {

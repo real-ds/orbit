@@ -12,9 +12,9 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
 export const Card = forwardRef<HTMLDivElement, CardProps>(
   ({ className, variant = "default", padding = "md", hover = false, children, ...props }, ref) => {
     const variants = {
-      default: "bg-charcoal-800 border border-cream-0/10",
-      elevated: "bg-charcoal-800 border border-cream-0/10 shadow-xl shadow-charcoal-900/50",
-      outlined: "bg-transparent border border-cream-0/20",
+      default: "bg-bg-elevated border border-border",
+      elevated: "bg-bg-elevated border border-border shadow-card",
+      outlined: "bg-transparent border border-border",
     };
 
     const paddings = {
@@ -28,10 +28,10 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={cn(
-          "rounded-2xl transition-all duration-300",
+          "rounded-xl transition-all duration-300",
           variants[variant],
           paddings[padding],
-          hover && "hover:border-cream-0/20 hover:shadow-lg hover:shadow-charcoal-900/50 hover:-translate-y-0.5",
+          hover && "hover:border-accent/30 hover:shadow-card-hover hover:-translate-y-0.5",
           className
         )}
         {...props}
@@ -64,7 +64,7 @@ export const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(
   ({ className, as: Component = "h3", children, ...props }, ref) => (
     <Component
       ref={ref}
-      className={cn("font-display text-cream-10 text-lg leading-tight", className)}
+      className={cn("font-display text-text-primary text-lg leading-tight", className)}
       {...props}
     >
       {children}
@@ -78,7 +78,7 @@ export interface CardDescriptionProps extends HTMLAttributes<HTMLParagraphElemen
 
 export const CardDescription = forwardRef<HTMLParagraphElement, CardDescriptionProps>(
   ({ className, children, ...props }, ref) => (
-    <p ref={ref} className={cn("text-cream-40 text-sm mt-1 leading-relaxed", className)} {...props}>
+    <p ref={ref} className={cn("text-text-secondary text-sm mt-1 leading-relaxed", className)} {...props}>
       {children}
     </p>
   )
@@ -102,7 +102,7 @@ export interface CardFooterProps extends HTMLAttributes<HTMLDivElement> {}
 
 export const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(
   ({ className, children, ...props }, ref) => (
-    <div ref={ref} className={cn("mt-4 pt-4 border-t border-cream-0/10 flex items-center gap-3", className)} {...props}>
+    <div ref={ref} className={cn("mt-4 pt-4 border-t border-border flex items-center gap-3", className)} {...props}>
       {children}
     </div>
   )
