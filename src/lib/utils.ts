@@ -9,49 +9,17 @@ const dateFormatter = new Intl.DateTimeFormat("en-US", {
   timeZone: "UTC",
 });
 
-const timeFormatter = new Intl.DateTimeFormat("en-US", {
-  hour: "2-digit",
-  minute: "2-digit",
-  hour12: false,
-  timeZone: "UTC",
-});
-
-const weekdayFormatter = new Intl.DateTimeFormat("en-US", {
-  weekday: "long",
-  month: "long",
-  day: "numeric",
-  year: "numeric",
-  timeZone: "UTC",
-});
-
 export function formatDate(iso: string): string {
   return dateFormatter.format(new Date(iso));
 }
 
-export function formatTime(iso: string): string {
-  return timeFormatter.format(new Date(iso));
-}
-
-export function formatDateTime(iso: string): string {
-  return `${formatDate(iso)} · ${formatTime(iso)} UTC`;
-}
-
-export function formatLongDate(date: Date): string {
-  return weekdayFormatter.format(date);
-}
-
-export function formatReads(reads: number): string {
-  if (reads < 1000) return String(reads);
-  return `${(reads / 1000).toFixed(1).replace(/\.0$/, "")}k`;
-}
-
-export function initialsOf(name: string): string {
-  return name
-    .split(" ")
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
+export function formatArticleDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  });
 }
 
 export function formatRelativeTime(iso: string): string {
@@ -69,69 +37,25 @@ export function formatRelativeTime(iso: string): string {
   return formatDate(iso);
 }
 
-export function truncate(text: string, length: number): string {
-  if (text.length <= length) return text;
-  return text.slice(0, length).trim() + "...";
-}
-
-export function getCategorySlug(category: string): string {
-  return category
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/&/g, "")
-    .replace(/[^a-z0-9-]/g, "");
-}
-
-export function getCategoryHref(category: string): string {
-  if (category === "All" || category === "all") return "/";
-  return `/category/${getCategorySlug(category)}`;
-}
-
+/** "MODEL_RELEASE" -> "Model Release" */
 export function formatDevelopmentType(type: string): string {
   return type
     .replace(/_/g, " ")
     .toLowerCase()
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+    .replace(/\b\w/g, (character) => character.toUpperCase());
 }
 
-export const CATEGORY_LIST = [
-  "All",
-  "AI Models",
-  "Agentic AI",
-  "Generative AI",
-  "Machine Learning",
-  "Deep Learning",
-  "AI Research",
-  "AI Infrastructure",
-  "AI Frameworks & Tools",
-  "AI Industry",
-  "AI Applications",
-  "AI Safety & Policy",
-  "Other",
-] as const;
+/**
+ * Stable numeric seed derived from an id. Used to pick a deterministic
+ * generative artwork so a given article always renders the same illustration.
+ */
+export function seedFromId(id: string): number {
+  const trailing = /(\d+)$/.exec(id);
+  if (trailing) return Number(trailing[1]);
 
-export const DEVELOPMENT_TYPES = [
-  "MODEL_RELEASE",
-  "MODEL_UPDATE",
-  "RESEARCH_PAPER",
-  "FRAMEWORK_RELEASE",
-  "BENCHMARK",
-  "PRODUCT_LAUNCH",
-  "FUNDING",
-  "ACQUISITION",
-  "PARTNERSHIP",
-  "REGULATION",
-  "OTHER",
-] as const;
-
-export function getCategoryColor(category: string): string {
-  return "bg-bg-raised text-text-primary border-border";
-}
-
-export function getDevelopmentTypeColor(type: string): string {
-  return "bg-bg-raised text-text-secondary border-border";
-}
-
-export function getTagTypeColor(type: string): string {
-  return "bg-bg-raised text-text-secondary border-border";
+  let hash = 0;
+  for (let index = 0; index < id.length; index += 1) {
+    hash = (hash * 31 + id.charCodeAt(index)) >>> 0;
+  }
+  return hash;
 }

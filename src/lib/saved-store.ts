@@ -1,13 +1,16 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
-const STORAGE_KEY = "theorbit:saved-v1";
+const STORAGE_KEY = "ai-tracker:saved-articles:v1";
 
-type SavedSnapshot = {
+/** Keys written by earlier iterations of the app, migrated on first read. */
+const LEGACY_KEYS = ["ai-tracker-saved-articles", "theorbit:saved-v1"];
+
+export interface SavedSnapshot {
   ids: string[];
   ready: boolean;
-};
+}
 
 const EMPTY_SNAPSHOT: SavedSnapshot = { ids: [], ready: false };
 
@@ -19,25 +22,61 @@ function emit() {
   for (const listener of listeners) listener();
 }
 
+function parseIds(raw: string | null): string[] | null {
+  if (!raw) return null;
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return null;
+    return parsed.filter((value): value is string => typeof value === "string");
+  } catch {
+    return null;
+  }
+}
+
+function readStoredIds(): string[] {
+  if (typeof window === "undefined") return [];
+
+  const current = parseIds(window.localStorage.getItem(STORAGE_KEY));
+  if (current) return current;
+
+  // First run after the store was unified: carry over anything saved under
+  // an older key so bookmarks are not silently lost.
+  for (const legacyKey of LEGACY_KEYS) {
+    const legacy = parseIds(window.localStorage.getItem(legacyKey));
+    if (legacy?.length) {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(legacy));
+      return legacy;
+    }
+  }
+
+  return [];
+}
+
 function load() {
   if (loaded || typeof window === "undefined") return;
   loaded = true;
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    const parsed: unknown = raw ? JSON.parse(raw) : [];
-    const ids = Array.isArray(parsed)
-      ? parsed.filter((value): value is string => typeof value === "string")
-      : [];
-    snapshot = { ids, ready: true };
-  } catch {
-    snapshot = { ids: [], ready: true };
-  }
+  snapshot = { ids: readStoredIds(), ready: true };
   emit();
 }
 
 function subscribe(listener: () => void) {
   listeners.add(listener);
   load();
+
+  // Keep other tabs in sync.
+  if (typeof window !== "undefined") {
+    const onStorage = (event: StorageEvent) => {
+      if (event.key !== null && event.key !== STORAGE_KEY) return;
+      snapshot = { ids: readStoredIds(), ready: true };
+      emit();
+    };
+    window.addEventListener("storage", onStorage);
+    return () => {
+      listeners.delete(listener);
+      window.removeEventListener("storage", onStorage);
+    };
+  }
+
   return () => {
     listeners.delete(listener);
   };
@@ -51,11 +90,7 @@ function getServerSnapshot() {
   return EMPTY_SNAPSHOT;
 }
 
-export function toggleSaved(slug: string) {
-  if (!loaded) load();
-  const ids = snapshot.ids.includes(slug)
-    ? snapshot.ids.filter((id) => id !== slug)
-    : [slug, ...snapshot.ids];
+function persist(ids: string[]) {
   snapshot = { ids, ready: true };
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
@@ -65,6 +100,28 @@ export function toggleSaved(slug: string) {
   emit();
 }
 
-export function useSavedStories(): SavedSnapshot {
+export function toggleSaved(articleId: string): boolean {
+  if (!loaded) load();
+
+  const isSaved = snapshot.ids.includes(articleId);
+  const ids = isSaved
+    ? snapshot.ids.filter((id) => id !== articleId)
+    : [articleId, ...snapshot.ids];
+
+  persist(ids);
+  return !isSaved;
+}
+
+export function isArticleSaved(articleId: string): boolean {
+  return snapshot.ids.includes(articleId);
+}
+
+/** Subscribe to the saved-article list. */
+export function useSavedArticles(): SavedSnapshot {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+}
+
+/** Toggle an article and report its new saved state. */
+export function useToggleSaved(): (articleId: string) => boolean {
+  return useCallback((articleId: string) => toggleSaved(articleId), []);
 }

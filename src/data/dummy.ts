@@ -1,33 +1,10 @@
-import type { Article, Tag, Source, Category, DevelopmentType, CollectionRun, CollectionRunSource } from '@/types';
+import type { Article, Source, CollectionRun, CollectionRunSource } from '@/types';
+import { CATEGORIES, DEVELOPMENT_TYPES, TAGS } from './taxonomy';
+import { buildFacets, filterArticles, sortArticles, type SortKey } from '@/lib/articles';
 
-export const categories: Category[] = [
-  'AI Models',
-  'Agentic AI',
-  'Generative AI',
-  'Machine Learning',
-  'Deep Learning',
-  'AI Research',
-  'AI Infrastructure',
-  'AI Frameworks & Tools',
-  'AI Industry',
-  'AI Applications',
-  'AI Safety & Policy',
-  'Other',
-];
-
-export const developmentTypes: DevelopmentType[] = [
-  'MODEL_RELEASE',
-  'MODEL_UPDATE',
-  'RESEARCH_PAPER',
-  'FRAMEWORK_RELEASE',
-  'BENCHMARK',
-  'PRODUCT_LAUNCH',
-  'FUNDING',
-  'ACQUISITION',
-  'PARTNERSHIP',
-  'REGULATION',
-  'OTHER',
-];
+export const categories = CATEGORIES;
+export const developmentTypes = DEVELOPMENT_TYPES;
+export const tags = TAGS;
 
 export const sources: Source[] = [
   { id: 'src-1', name: 'Ars Technica AI', url: 'https://arstechnica.com/tag/ai/', type: 'rss', category: 'news' },
@@ -42,39 +19,6 @@ export const sources: Source[] = [
   { id: 'src-10', name: 'Papers with Code', url: 'https://paperswithcode.com/latest', type: 'rss', category: 'research' },
   { id: 'src-11', name: 'Hacker News', url: 'https://hn.algolia.com/api/v1/search_by_date?tags=story', type: 'api', category: 'community' },
   { id: 'src-12', name: 'arXiv AI', url: 'https://arxiv.org/list/cs.AI/recent', type: 'api', category: 'research' },
-];
-
-export const tags: Tag[] = [
-  { id: 'tag-1', name: 'GPT-4', type: 'model', count: 45 },
-  { id: 'tag-2', name: 'Claude', type: 'model', count: 38 },
-  { id: 'tag-3', name: 'Gemini', type: 'model', count: 32 },
-  { id: 'tag-4', name: 'LLaMA', type: 'model', count: 28 },
-  { id: 'tag-5', name: 'Mistral', type: 'model', count: 22 },
-  { id: 'tag-6', name: 'Transformer', type: 'technology', count: 67 },
-  { id: 'tag-7', name: 'RAG', type: 'technology', count: 41 },
-  { id: 'tag-8', name: 'Fine-tuning', type: 'technology', count: 35 },
-  { id: 'tag-9', name: 'Quantization', type: 'technology', count: 29 },
-  { id: 'tag-10', name: 'Agents', type: 'concept', count: 56 },
-  { id: 'tag-11', name: 'Tool Use', type: 'technology', count: 33 },
-  { id: 'tag-12', name: 'Memory', type: 'concept', count: 27 },
-  { id: 'tag-13', name: 'PyTorch', type: 'framework', count: 48 },
-  { id: 'tag-14', name: 'TensorFlow', type: 'framework', count: 31 },
-  { id: 'tag-15', name: 'JAX', type: 'framework', count: 19 },
-  { id: 'tag-16', name: 'vLLM', type: 'framework', count: 24 },
-  { id: 'tag-17', name: 'OpenAI', type: 'organization', count: 52 },
-  { id: 'tag-18', name: 'Google DeepMind', type: 'organization', count: 44 },
-  { id: 'tag-19', name: 'Anthropic', type: 'organization', count: 39 },
-  { id: 'tag-20', name: 'Meta AI', type: 'organization', count: 35 },
-  { id: 'tag-21', name: 'NVIDIA', type: 'organization', count: 41 },
-  { id: 'tag-22', name: 'Hugging Face', type: 'organization', count: 28 },
-  { id: 'tag-23', name: 'Multimodal', type: 'technology', count: 37 },
-  { id: 'tag-24', name: 'Code Generation', type: 'concept', count: 26 },
-  { id: 'tag-25', name: 'Reasoning', type: 'concept', count: 31 },
-  { id: 'tag-26', name: 'Alignment', type: 'concept', count: 23 },
-  { id: 'tag-27', name: 'Benchmarks', type: 'development_type', count: 21 },
-  { id: 'tag-28', name: 'Open Source', type: 'concept', count: 43 },
-  { id: 'tag-29', name: 'Enterprise AI', type: 'concept', count: 18 },
-  { id: 'tag-30', name: 'Edge AI', type: 'technology', count: 15 },
 ];
 
 const baseDate = new Date('2026-11-17T00:00:00Z');
@@ -888,81 +832,49 @@ export function getArticlesPaginated(
     developmentTypes?: string[];
     organizations?: string[];
     technologies?: string[];
+    tags?: string[];
+    sort?: SortKey;
   } = {}
 ) {
-  let filtered = [...dummyArticles];
+  const filtered = filterArticles(dummyArticles, filters);
+  const sorted = sortArticles(filtered, filters.sort ?? "newest", filters.search ?? "");
 
-  if (filters.search) {
-    const q = filters.search.toLowerCase();
-    filtered = filtered.filter(a =>
-      a.headline.toLowerCase().includes(q) ||
-      a.summary.toLowerCase().includes(q) ||
-      a.technologies.some(t => t.toLowerCase().includes(q)) ||
-      a.organizations.some(o => o.toLowerCase().includes(q)) ||
-      a.tags.some(t => t.name.toLowerCase().includes(q))
-    );
-  }
-
-  if (filters.categories?.length) {
-    filtered = filtered.filter(a => filters.categories!.includes(a.category));
-  }
-
-  if (filters.developmentTypes?.length) {
-    filtered = filtered.filter(a => filters.developmentTypes!.includes(a.developmentType));
-  }
-
-  if (filters.organizations?.length) {
-    filtered = filtered.filter(a => a.organizations.some(o => filters.organizations!.includes(o)));
-  }
-
-  if (filters.technologies?.length) {
-    filtered = filtered.filter(a => a.technologies.some(t => filters.technologies!.includes(t)));
-  }
-
-  filtered.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
-
-  const total = filtered.length;
-  const totalPages = Math.ceil(total / limit);
+  const total = sorted.length;
+  const totalPages = Math.max(1, Math.ceil(total / limit));
   const start = (page - 1) * limit;
-  const data = filtered.slice(start, start + limit);
+  const data = sorted.slice(start, start + limit);
 
-  const facets = {
-    categories: categories.map(c => ({ name: c, count: dummyArticles.filter(a => a.category === c).length })).filter(c => c.count > 0),
-    developmentTypes: developmentTypes.map(d => ({ name: d, count: dummyArticles.filter(a => a.developmentType === d).length })).filter(d => d.count > 0),
-    organizations: Array.from(new Set(dummyArticles.flatMap(a => a.organizations))).map(o => ({ name: o, count: dummyArticles.filter(a => a.organizations.includes(o)).length })).filter(o => o.count > 0).sort((a, b) => b.count - a.count).slice(0, 20),
-    technologies: Array.from(new Set(dummyArticles.flatMap(a => a.technologies))).map(t => ({ name: t, count: dummyArticles.filter(a => a.technologies.includes(t)).length })).filter(t => t.count > 0).sort((a, b) => b.count - a.count).slice(0, 20),
+  return {
+    data,
+    total,
+    page,
+    limit,
+    totalPages,
+    facets: buildFacets(dummyArticles),
   };
-
-  return { data, total, page, limit, totalPages, facets };
-}
-
-export function getArticleById(id: string): Article | undefined {
-  return dummyArticles.find(a => a.id === id);
 }
 
 export function getArticleByUrlHash(hash: string): Article | undefined {
-  return dummyArticles.find(a => a.urlHash === hash);
+  return dummyArticles.find((article) => article.urlHash === hash);
 }
 
 export function getRelatedArticles(article: Article, limit = 5): Article[] {
   return dummyArticles
-    .filter(a => a.id !== article.id)
-    .filter(a => a.category === article.category || a.organizations.some(o => article.organizations.includes(o)) || a.tags.some(t => article.tags.some(at => at.name === t.name)))
-    .sort((a, b) => {
-      const scoreA = (a.category === article.category ? 3 : 0) + a.organizations.filter(o => article.organizations.includes(o)).length + a.tags.filter(t => article.tags.some(at => at.name === t.name)).length;
-      const scoreB = (b.category === article.category ? 3 : 0) + b.organizations.filter(o => article.organizations.includes(o)).length + b.tags.filter(t => article.tags.some(at => at.name === t.name)).length;
-      return scoreB - scoreA;
-    })
-    .slice(0, limit);
-}
-
-export function getCategoryCounts(): { category: Category; count: number }[] {
-  return categories
-    .map(c => ({ category: c, count: dummyArticles.filter(a => a.category === c).length }))
-    .filter(c => c.count > 0)
-    .sort((a, b) => b.count - a.count);
-}
-
-export function getTopTags(limit = 30): Tag[] {
-  return [...tags].sort((a, b) => (b.count || 0) - (a.count || 0)).slice(0, limit);
+    .filter((candidate) => candidate.id !== article.id)
+    .filter(
+      (candidate) =>
+        candidate.category === article.category ||
+        candidate.organizations.some((org) => article.organizations.includes(org)) ||
+        candidate.tags.some((tag) => article.tags.some((own) => own.name === tag.name)),
+    )
+    .map((candidate) => ({
+      candidate,
+      score:
+        (candidate.category === article.category ? 3 : 0) +
+        candidate.organizations.filter((org) => article.organizations.includes(org)).length +
+        candidate.tags.filter((tag) => article.tags.some((own) => own.name === tag.name)).length,
+    }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit)
+    .map((entry) => entry.candidate);
 }

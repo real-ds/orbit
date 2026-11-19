@@ -1,73 +1,78 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { SiteFooter } from "@/components/layout/SiteFooter";
+import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://orbit.vercel.app"),
   title: {
-    default: "AI Intelligence Tracker — Automated AI & Tech News Aggregation",
-    template: "%s · AI Intelligence Tracker",
+    default: "Orbit",
+    template: "%s · Orbit",
   },
   description:
-    "Automated AI and technology news aggregation platform. Discover, search, and explore recent developments in artificial intelligence, machine learning, agentic AI, research papers, model releases, and industry announcements.",
-  applicationName: "AI Intelligence Tracker",
-  keywords: [
-    "AI news",
-    "artificial intelligence",
-    "machine learning",
-    "agentic AI",
-    "LLM",
-    "AI research",
-    "model releases",
-    "AI industry",
-    "technology news",
-    "AI aggregation",
-  ],
-  authors: [{ name: "AI Intelligence Tracker" }],
+    "Track the latest AI research, model releases, frameworks and industry news. Summarised every 48 hours, always linked to the original source.",
+  applicationName: "Orbit",
   openGraph: {
-    title: "AI Intelligence Tracker — Automated AI & Tech News Aggregation",
+    title: "Orbit",
     description:
-      "Stay informed about the latest AI developments. Automated collection, AI-powered summarization, and structured metadata for easy discovery.",
-    siteName: "AI Intelligence Tracker",
+      "The latest AI research, model releases and industry news — summarised every 48 hours.",
     type: "website",
+    siteName: "Orbit",
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI Intelligence Tracker — Automated AI & Tech News Aggregation",
+    title: "Orbit",
     description:
-      "Stay informed about the latest AI developments. Automated collection, AI-powered summarization, and structured metadata for easy discovery.",
-  },
-  robots: {
-    index: true,
-    follow: true,
+      "The latest AI research, model releases and industry news — summarised every 48 hours.",
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0B0D0C",
-  colorScheme: "dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+  ],
+  colorScheme: "light dark",
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover",
 };
+
+/**
+ * Applies the stored theme before first paint so the page never flashes the
+ * wrong colour scheme on load.
+ */
+const themeScript = `(function(){try{var s=localStorage.getItem('orbit:theme');var t=(s==='light'||s==='dark')?s:(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=t;}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html
+      lang="en"
+      className={`${inter.variable}`}
+      suppressHydrationWarning
+    >
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body suppressHydrationWarning className="font-sans antialiased bg-bg text-text-primary min-h-screen">
+      <body suppressHydrationWarning>
+        <a className="skip-link" href="#app">
+          Skip to content
+        </a>
         <Navbar />
-        <main style={{ paddingTop: "72px" }}>
+        <main className="wrap" id="app">
           {children}
         </main>
+        <SiteFooter />
+        <ThemeToggle />
       </body>
     </html>
   );

@@ -81,33 +81,6 @@ export interface Article {
   readMinutes?: number;
 }
 
-export interface PaginatedResponse<T> {
-  data: T[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-  facets: {
-    categories: { name: Category; count: number }[];
-    developmentTypes: { name: DevelopmentType; count: number }[];
-    organizations: { name: string; count: number }[];
-    technologies: { name: string; count: number }[];
-  };
-}
-
-export interface FilterState {
-  search: string;
-  categories: Category[];
-  developmentTypes: DevelopmentType[];
-  organizations: string[];
-  technologies: string[];
-  dateFrom: string | null;
-  dateTo: string | null;
-  sort: 'newest' | 'oldest' | 'relevance';
-  page: number;
-  limit: number;
-}
-
 export interface CollectionRun {
   id: string;
   startedAt: string;
@@ -130,4 +103,25 @@ export interface CollectionRunSource {
   articlesFound: number;
   articlesNew: number;
   articlesDuplicate: number;
+}
+
+export interface FacetCount {
+  name: string;
+  count: number;
+}
+
+export interface ArticleFacets {
+  categories: FacetCount[];
+  developmentTypes: FacetCount[];
+  organizations: FacetCount[];
+  technologies: FacetCount[];
+}
+
+export interface PaginatedArticles {
+  data: Article[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  facets: ArticleFacets;
 }

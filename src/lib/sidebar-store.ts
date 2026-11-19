@@ -1,9 +1,13 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
-const STORAGE_KEY = "theorbit:sidebar-collapsed";
+const STORAGE_KEY = "ai-tracker:sidebar-collapsed:v1";
 
+/**
+ * `true` means the filter sidebar is collapsed to its rail.
+ * The default is expanded on desktop and collapsed on narrow viewports.
+ */
 let collapsed = false;
 let loaded = false;
 const listeners = new Set<() => void>();
@@ -15,11 +19,20 @@ function emit() {
 function load() {
   if (loaded || typeof window === "undefined") return;
   loaded = true;
+
   try {
-    collapsed = window.localStorage.getItem(STORAGE_KEY) === "1";
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    if (stored === "1") {
+      collapsed = true;
+    } else if (stored === "0") {
+      collapsed = false;
+    } else {
+      collapsed = window.innerWidth < 820;
+    }
   } catch {
-    collapsed = false;
+    collapsed = window.innerWidth < 820;
   }
+
   emit();
 }
 
@@ -51,4 +64,8 @@ export function toggleSidebarCollapsed() {
 
 export function useSidebarCollapsed(): boolean {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+}
+
+export function useToggleSidebar(): () => void {
+  return useCallback(() => toggleSidebarCollapsed(), []);
 }
