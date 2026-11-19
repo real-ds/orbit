@@ -79,7 +79,7 @@ export function ArticleCard({ article, variant = "card", hideActions = false }: 
                 title={isSaved ? "Saved" : "Save for later"}
               >
                 <Bookmark
-                  className="icon"
+                  size={18}
                   aria-hidden="true"
                   fill={isSaved ? "currentColor" : "none"}
                 />
@@ -92,7 +92,7 @@ export function ArticleCard({ article, variant = "card", hideActions = false }: 
                 aria-label={`View article: ${article.headline}`}
                 title="View article"
               >
-                <ArrowUpRight className="icon" aria-hidden="true" />
+                <ArrowUpRight size={18} aria-hidden="true" />
               </a>
             </div>
           )}

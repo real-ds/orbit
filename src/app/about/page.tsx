@@ -42,7 +42,7 @@ export default function AboutPage() {
       </header>
 
       <section className="about-band about-band--inverse" id="mission">
-        <div className="wrap about-band__inner">
+        <div className="about-band__inner">
           <p className="about-band__index">01 / Why Orbit</p>
 
           <div className="about-band__grid">
@@ -78,7 +78,7 @@ export default function AboutPage() {
       </section>
 
       <section className="about-band" id="how-it-works">
-        <div className="wrap about-band__inner">
+        <div className="about-band__inner">
           <p className="about-band__index">02 / How it works</p>
           <h2 className="about-band__title">Three steps, one tidy feed.</h2>
 
@@ -95,7 +95,7 @@ export default function AboutPage() {
       </section>
 
       <section className="about-band about-band--inverse" id="categories">
-        <div className="wrap about-band__inner">
+        <div className="about-band__inner">
           <p className="about-band__index">03 / Explore</p>
 
           <div className="about-band__grid">

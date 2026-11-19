@@ -151,11 +151,6 @@ export function FeedView({
             aria-label="Search articles"
             onChange={(event) => handleQueryChange(event.target.value)}
           />
-          {hasActiveFilters && (
-            <Button variant="ghost" size="sm" onClick={handleClear} className="search__clear">
-              Clear
-            </Button>
-          )}
         </div>
 
         {!hideCategoryTabs && (
@@ -189,6 +184,12 @@ export function FeedView({
           >
             Filter
           </Button>
+
+          {hasActiveFilters && (
+            <Button variant="ghost" size="sm" onClick={handleClear}>
+              Clear filters
+            </Button>
+          )}
 
           <select
             className="ui-select ui-select--inline"

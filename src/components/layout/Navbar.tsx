@@ -2,12 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Bookmark, Search } from "lucide-react";
 
 const NAV_ITEMS = [
   { href: "/", label: "Latest" },
   { href: "/explore", label: "Explore" },
-  { href: "/search", label: "Search" },
-  { href: "/saved", label: "Saved" },
   { href: "/about", label: "About" },
 ] as const;
 
@@ -18,6 +17,8 @@ function isActive(pathname: string, href: string): boolean {
 
 export function Navbar() {
   const pathname = usePathname();
+  const searchActive = isActive(pathname, "/search");
+  const savedActive = isActive(pathname, "/saved");
 
   return (
     <header className="top">
@@ -38,6 +39,31 @@ export function Navbar() {
             </Link>
           ))}
         </nav>
+
+        <div className="nav-actions" role="group" aria-label="Quick links">
+          <Link
+            className="nav-action"
+            href="/search"
+            aria-label="Search articles"
+            title="Search"
+            aria-current={searchActive ? "page" : undefined}
+          >
+            <Search size={19} aria-hidden="true" />
+          </Link>
+          <Link
+            className="nav-action"
+            href="/saved"
+            aria-label="Saved articles"
+            title="Saved"
+            aria-current={savedActive ? "page" : undefined}
+          >
+            <Bookmark
+              size={19}
+              aria-hidden="true"
+              fill={savedActive ? "currentColor" : "none"}
+            />
+          </Link>
+        </div>
       </div>
     </header>
   );
