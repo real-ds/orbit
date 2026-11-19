@@ -1443,255 +1443,339 @@
     padding: 0;
   }
 
+  .about-container {
+    width: 100%;
+    max-width: 1680px;
+    margin: 0 auto;
+    padding: 0 clamp(12px, 2vw, 24px);
+  }
+
   .about-hero {
     display: grid;
-    place-items: center;
-    min-height: clamp(420px, 72vh, 760px);
-    padding: clamp(72px, 12vw, 140px) 0;
+    align-items: center;
+    justify-items: center;
+    min-height: clamp(480px, 82vh, 860px);
+    padding: clamp(96px, 12vw, 160px) 0 clamp(72px, 10vw, 128px);
     text-align: center;
-    background: transparent;
   }
 
   .about-hero__inner {
-    max-width: 920px;
-  }
-
-  .about-hero__eyebrow {
-    margin: 0 0 24px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.22em;
-    color: var(--mute);
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 clamp(12px, 2vw, 24px);
   }
 
   .about-hero__title {
     margin: 0;
-    font-family: var(--font-inter), var(--font-sans);
-    font-size: clamp(46px, 11vw, 152px);
-    font-weight: 700;
-    line-height: 0.94;
-    letter-spacing: -0.06em;
+    font-size: clamp(34px, 5.4vw, 76px);
+    font-weight: 600;
+    line-height: 1.04;
+    letter-spacing: -0.045em;
   }
 
-  .about-hero__type {
-    display: inline-block;
-    max-width: 100%;
-    overflow: hidden;
-    white-space: nowrap;
-    border-right: 3px solid var(--fg);
-    clip-path: inset(0 100% 0 0);
-    animation:
-      about-reveal 1.6s steps(13, end) 0.15s both,
-      about-caret 0.8s step-end infinite;
+  .about-hero__question {
+    display: block;
   }
 
-  @keyframes about-reveal {
-    to {
-      clip-path: inset(0 0 0 0);
-    }
+  .about-hero__question-mark {
+    color: var(--fg);
   }
 
-  @keyframes about-caret {
-    50% {
-      border-right-color: transparent;
-    }
-  }
-
-  .about-hero__tagline {
-    margin: 28px auto 0;
-    max-width: 46ch;
-    font-size: clamp(15px, 1.4vw, 18px);
-    line-height: 1.5;
+  .about-hero__typewriter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.06em;
+    width: fit-content;
+    min-height: 1.05em;
+    margin: clamp(16px, 2vw, 28px) auto 0;
+    padding: 14px 0 10px;
+    font-family: var(--font-instrument-serif), serif;
+    font-size: max(18px, calc(1em - 16px));
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.01em;
     color: var(--mute);
   }
 
-  .about-band {
-    --band-bg: var(--bg);
-    --band-fg: var(--fg);
-    --band-muted: var(--mute);
-    --band-line: color-mix(in srgb, var(--band-fg) 18%, transparent);
-    width: 100%;
-    margin-left: 0;
-    padding: clamp(72px, 10vw, 128px) 0;
-    background: var(--band-bg);
-    color: var(--band-fg);
+  .about-hero__typed {
+    display: inline-block;
+    white-space: nowrap;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 6px;
   }
 
-  .about-band--inverse {
-    --band-bg: var(--fg);
-    --band-fg: var(--bg);
-    --band-muted: var(--mute-soft);
+  .about-hero__typed::after {
+    content: "\200B";
   }
 
-  .about-band__inner {
-    display: grid;
-    gap: clamp(36px, 5vw, 64px);
+  .about-hero__cursor {
+    display: inline-block;
+    flex: none;
+    width: 0.055em;
+    height: 0.78em;
+    background: var(--fg);
+    animation: about-cursor-blink 1s step-end infinite;
   }
 
-  .about-band__index {
-    margin: 0;
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--band-line);
-    font-family: var(--font-mono);
-    font-size: 11px;
+  @keyframes about-cursor-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .about-ribbon {
+    overflow: hidden;
+    padding: clamp(12px, 1.4vw, 18px) 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .about-ribbon__track {
+    display: flex;
+    width: max-content;
+    animation: about-ribbon-scroll 140s linear infinite;
+  }
+
+  .about-ribbon:hover .about-ribbon__track {
+    animation-play-state: paused;
+  }
+
+  .about-ribbon__group {
+    display: flex;
+    flex: none;
+    align-items: center;
+  }
+
+  .about-ribbon__item {
+    display: inline-flex;
+    align-items: center;
+    gap: clamp(24px, 3vw, 48px);
+    padding-right: clamp(24px, 3vw, 48px);
+    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+    font-size: clamp(13px, 1.2vw, 16px);
+    font-weight: 500;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    letter-spacing: 0.16em;
-    color: var(--band-muted);
+    white-space: nowrap;
+    color: var(--mute);
   }
 
-  .about-band__grid {
+  .about-ribbon__item::after {
+    content: "";
+    width: 5px;
+    height: 5px;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+  }
+
+  @keyframes about-ribbon-scroll {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .about-section {
+    padding: clamp(72px, 10vw, 140px) 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .about-process {
+    background: var(--soft-deep);
+  }
+
+  .about-intro {
+    display: grid;
+    border-top: 0;
+  }
+
+  .about-intro .about-container {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: clamp(32px, 6vw, 80px);
-    align-items: start;
+    gap: clamp(40px, 6vw, 96px);
   }
 
-  .about-band__title {
+  .about-intro__heading h2,
+  .about-section__heading h2,
+  .about-explore__intro h2,
+  .about-cta h2 {
     margin: 0;
-    max-width: 14ch;
-    font-size: clamp(34px, 4.6vw, 64px);
+    font-size: clamp(34px, 4.8vw, 68px);
     font-weight: 600;
     line-height: 1.03;
     letter-spacing: -0.045em;
   }
 
-  .about-band__copy {
+  .about-intro__content {
     display: grid;
-    gap: 18px;
+    align-content: start;
+    gap: 20px;
     font-size: clamp(16px, 1.5vw, 19px);
     line-height: 1.6;
-    color: var(--band-muted);
+    color: var(--mute);
   }
 
-  .about-band__copy p {
+  .about-intro__content p {
     margin: 0;
+    text-align: justify;
   }
 
-  .about-band__facts {
+  .about-section__heading {
+    max-width: 800px;
+  }
+
+  .about-section__heading > p {
+    max-width: 48ch;
+    margin: 24px 0 0;
+    font-size: clamp(16px, 1.5vw, 19px);
+    line-height: 1.6;
+    color: var(--mute);
+  }
+
+  .about-steps {
+    margin-top: clamp(48px, 6vw, 80px);
+    border-top: 1px solid var(--line);
+  }
+
+  .about-step {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1px;
-    margin: 0;
-    background: var(--band-line);
-    border: 1px solid var(--band-line);
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: clamp(20px, 3vw, 48px);
+    align-items: start;
+    padding: clamp(28px, 3vw, 42px) 0;
+    border-bottom: 1px solid var(--line);
   }
 
-  .about-band__fact {
-    background: var(--band-bg);
-    padding: 24px;
-  }
-
-  .about-band__fact dt {
+  .about-step__number {
+    padding-top: 10px;
     font-family: var(--font-mono);
     font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--band-muted);
+    letter-spacing: 0.14em;
+    color: var(--mute);
   }
 
-  .about-band__fact dd {
-    margin: 8px 0 0;
-    font-size: 22px;
-    font-weight: 600;
+  .about-step__content h3 {
+    font-size: clamp(22px, 2.4vw, 32px);
+    font-weight: 500;
     letter-spacing: -0.03em;
   }
 
-  .about-band__steps {
+  .about-step__content p {
+    max-width: 72ch;
+    margin: 12px 0 0;
+    font-size: clamp(15px, 1.4vw, 18px);
+    line-height: 1.6;
+    color: var(--mute);
+  }
+
+  .about-step__icon {
+    width: 20px;
+    height: 20px;
+    margin-top: 8px;
+    color: var(--mute);
+    transition: transform 0.25s ease, color 0.25s ease;
+  }
+
+  .about-step:hover .about-step__icon {
+    color: var(--fg);
+    transform: translate(4px, -4px);
+  }
+
+  .about-explore__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(40px, 6vw, 96px);
+    align-items: start;
+  }
+
+  .about-explore__intro > p {
+    max-width: 48ch;
+    margin: 28px 0 0;
+    font-size: clamp(16px, 1.5vw, 19px);
+    line-height: 1.6;
+    color: var(--mute);
+  }
+
+  .about-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .about-topic {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 15px;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .about-topic svg {
+    flex: none;
+    opacity: 0.5;
+  }
+
+  .about-topic:hover {
+    border-color: var(--fg);
+    background: var(--soft);
+  }
+
+  .about-principles {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1px;
-    background: var(--band-line);
-    border: 1px solid var(--band-line);
+    gap: clamp(32px, 4vw, 64px);
+    margin-top: clamp(80px, 10vw, 140px);
+    padding-top: clamp(40px, 5vw, 64px);
+    border-top: 1px solid var(--line);
   }
 
-  .about-band__step {
-    background: var(--band-bg);
-    padding: 28px;
-  }
-
-  .about-band__step-number {
-    margin: 0;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    color: var(--band-muted);
-  }
-
-  .about-band__step h3 {
-    margin: 18px 0 10px;
-    font-size: 20px;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-  }
-
-  .about-band__step p:last-child {
-    margin: 0;
-    font-size: 15px;
-    line-height: 1.6;
-    color: var(--band-muted);
-  }
-
-  .about-band__subhead {
-    margin: 0 0 14px;
-    font-family: var(--font-mono);
-    font-size: 11px;
+  .about-principle h3 {
+    margin: 0 0 12px;
+    font-size: clamp(24px, 2.6vw, 36px);
     font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--band-muted);
+    letter-spacing: -0.035em;
   }
 
-  .about-band__chips .chip {
-    border-color: var(--band-line);
-    color: var(--band-fg);
-  }
-
-  .about-band__chips .chip:hover {
-    border-color: var(--band-fg);
-    background: color-mix(in srgb, var(--band-fg) 8%, transparent);
-  }
-
-  .about-band__meta {
-    margin: 32px 0 0;
-    border-top: 1px solid var(--band-line);
-  }
-
-  .about-band__meta-row {
-    display: grid;
-    grid-template-columns: 110px minmax(0, 1fr);
-    gap: 16px;
-    padding: 14px 0;
-    border-bottom: 1px solid var(--band-line);
-  }
-
-  .about-band__meta dt {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--band-muted);
-  }
-
-  .about-band__meta dd {
+  .about-principle p {
     margin: 0;
-    font-size: 15px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--mute);
   }
 
-  .about-band__cta {
-    margin-top: clamp(40px, 5vw, 64px);
+  .about-cta {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 32px;
+    margin-top: clamp(80px, 10vw, 140px);
+    padding: clamp(32px, 4vw, 56px);
+    border: 1px solid var(--line);
+    background: var(--soft-deep);
   }
 
-  .about-band__cta .btn {
-    background: var(--band-fg);
-    border-color: var(--band-fg);
-    color: var(--band-bg);
+  .about-cta h2 {
+    font-size: clamp(30px, 3.6vw, 52px);
   }
 
-  .about-band__cta .btn:hover {
-    background: var(--band-fg);
-    border-color: var(--band-fg);
-    opacity: 0.8;
+  .about-cta__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--fg);
+    font-size: 17px;
+    transition: opacity 0.2s ease;
+  }
+
+  .about-cta__link:hover {
+    opacity: 0.6;
   }
 
   /* ------------------------------------------------------- empty / loading */
@@ -1991,13 +2075,13 @@
       border-bottom: 0;
     }
 
-    .about-band__grid {
+    .about-intro .about-container,
+    .about-explore__grid {
       grid-template-columns: 1fr;
     }
 
-    .about-band__steps,
-    .about-band__facts {
-      grid-template-columns: 1fr;
+    .about-principles {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
@@ -2031,9 +2115,17 @@
       grid-template-columns: 1fr;
     }
 
-    .about-band__meta-row {
+    .about-principles {
       grid-template-columns: 1fr;
-      gap: 4px;
+    }
+
+    .about-step {
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    .about-step__icon {
+      display: none;
     }
 
     .footer__top {

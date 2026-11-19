@@ -2,144 +2,201 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { CATEGORIES, categoryHref } from "@/data/taxonomy";
+import AboutHero from "@/components/about/AboutHero";
+import CategoryRibbon from "@/components/about/CategoryRibbon";
 
 export const metadata: Metadata = {
   title: "About",
-  description: "How Orbit collects, summarises and classifies AI news every 48 hours.",
+  description:
+    "Discover how Orbit tracks, summarises and organises developments in artificial intelligence.",
 };
 
 const STEPS = [
   {
     number: "01",
-    title: "Discover",
-    body: "A scheduled collector gathers the last 48 hours of coverage from configured RSS feeds, APIs and publisher pages.",
+    title: "We find the signal.",
+    body: "Orbit collects recent developments from configured RSS feeds, APIs and trusted publishers across the AI ecosystem.",
   },
   {
     number: "02",
-    title: "Understand",
-    body: "Each story gets a concise summary, a category, a development type and tags for the models, organisations and ideas involved.",
+    title: "We make sense of it.",
+    body: "Stories are summarised, classified and tagged so you can understand what happened without reading through endless coverage.",
   },
   {
     number: "03",
-    title: "Connect",
-    body: "Duplicate URLs are merged, separate reporting is kept, and every item links straight back to its original publisher.",
+    title: "We keep you connected.",
+    body: "Articles are organised, duplicates are handled and original publisher links remain accessible for deeper reading.",
   },
 ];
 
 export default function AboutPage() {
   return (
     <article className="about">
-      <header className="about-hero">
-        <div className="about-hero__inner">
-          <p className="about-hero__eyebrow">About Orbit</p>
-          <h1 className="about-hero__title">
-            <span className="about-hero__type">AI, in focus.</span>
-          </h1>
-          <p className="about-hero__tagline">
-            A calmer way to track the models, research and industry moves shaping what comes next.
-          </p>
-        </div>
-      </header>
 
-      <section className="about-band about-band--inverse" id="mission">
-        <div className="about-band__inner">
-          <p className="about-band__index">01 / Why Orbit</p>
+      {/* HERO */}
+      <AboutHero />
+      <CategoryRibbon />
 
-          <div className="about-band__grid">
-            <h2 className="about-band__title">Clear signal, less noise.</h2>
-            <div className="about-band__copy">
-              <p>
-                Orbit is an independent AI news desk for people who want the story without the
-                scroll. We collect recent developments, summarise them in plain language and keep
-                the source one click away.
-              </p>
-              <p>
-                Instead of another endless feed, you get a compact, classified record of what
-                changed in AI — and why it matters.
-              </p>
-            </div>
+      {/* INTRODUCTION */}
+      <section className="about-section about-intro" id="mission">
+        <div className="about-container">
+
+          <div className="about-intro__heading">
+            <h2>
+              Too much happening.
+              <br />
+              Too little time.
+            </h2>
           </div>
 
-          <dl className="about-band__facts">
-            <div className="about-band__fact">
-              <dt>Cadence</dt>
-              <dd>Every 48 hours</dd>
-            </div>
-            <div className="about-band__fact">
-              <dt>Coverage</dt>
-              <dd>{CATEGORIES.length} categories</dd>
-            </div>
-            <div className="about-band__fact">
-              <dt>Attribution</dt>
-              <dd>Original links</dd>
-            </div>
-          </dl>
+          <div className="about-intro__content">
+            <p>
+              Artificial intelligence moves fast. New models,
+              research papers, products and breakthroughs appear
+              every day.
+            </p>
+
+            <p>
+              Orbit brings these developments into one place.
+              It collects relevant stories, makes sense of them
+              and presents them in a way that is easy to explore.
+            </p>
+
+            <p>
+              No endless scrolling. No unnecessary noise.
+              Just a clearer view of what is happening in AI.
+            </p>
+          </div>
+
         </div>
       </section>
 
-      <section className="about-band" id="how-it-works">
-        <div className="about-band__inner">
-          <p className="about-band__index">02 / How it works</p>
-          <h2 className="about-band__title">Three steps, one tidy feed.</h2>
+      {/* HOW IT WORKS */}
+      <section className="about-section about-process" id="how-it-works">
+        <div className="about-container">
 
-          <div className="about-band__steps">
+          <div className="about-section__heading">
+            <h2>
+              From information
+              <br />
+              to understanding.
+            </h2>
+
+            <p>
+              Every story goes through a simple process before
+              it reaches your feed.
+            </p>
+          </div>
+
+          <div className="about-steps">
             {STEPS.map((step) => (
-              <section key={step.number} className="about-band__step">
-                <p className="about-band__step-number">{step.number}</p>
-                <h3>{step.title}</h3>
-                <p>{step.body}</p>
-              </section>
+              <div
+                key={step.number}
+                className="about-step"
+              >
+                <span className="about-step__number">
+                  {step.number}
+                </span>
+
+                <div className="about-step__content">
+                  <h3>{step.title}</h3>
+                  <p>{step.body}</p>
+                </div>
+
+                <ArrowUpRight
+                  className="about-step__icon"
+                  aria-hidden="true"
+                />
+              </div>
             ))}
           </div>
+
         </div>
       </section>
 
-      <section className="about-band about-band--inverse" id="categories">
-        <div className="about-band__inner">
-          <p className="about-band__index">03 / Explore</p>
+      {/* EXPLORE */}
+      <section className="about-section about-explore" id="categories">
+        <div className="about-container">
 
-          <div className="about-band__grid">
-            <div>
-              <h2 className="about-band__title">Find your angle.</h2>
-              <div className="about-band__copy">
-                <p>
-                  Browse by category, development type, organisation or tag. Search runs across
-                  every headline and summary, and saved stories stay in your browser.
-                </p>
-              </div>
+          <div className="about-explore__grid">
+
+            <div className="about-explore__intro">
+              <h2>
+                Follow what
+                <br />
+                moves you.
+              </h2>
+
+              <p>
+                From machine learning to robotics, explore the
+                areas of AI that interest you. Browse categories,
+                discover organisations and follow the developments
+                shaping the industry.
+              </p>
             </div>
 
-            <div>
-              <h3 className="about-band__subhead">Categories</h3>
-              <div className="chips about-band__chips">
+            <div className="about-explore__topics">
+              <div className="about-topics">
                 {CATEGORIES.map((category) => (
-                  <Link key={category} className="chip" href={categoryHref(category)}>
+                  <Link
+                    key={category}
+                    className="about-topic"
+                    href={categoryHref(category)}
+                  >
                     {category}
+                    <ArrowUpRight
+                      size={14}
+                      aria-hidden="true"
+                    />
                   </Link>
                 ))}
               </div>
-
-              <dl className="about-band__meta">
-                <div className="about-band__meta-row">
-                  <dt>Stack</dt>
-                  <dd>Next.js, PostgreSQL and a scheduled collection worker.</dd>
-                </div>
-                <div className="about-band__meta-row">
-                  <dt>Privacy</dt>
-                  <dd>No accounts, no tracking. Saved articles never leave your device.</dd>
-                </div>
-              </dl>
             </div>
+
           </div>
 
-          <div className="about-band__cta">
-            <Link className="btn" href="/">
+          {/* PRINCIPLES */}
+          <div className="about-principles">
+
+            <div className="about-principle">
+              <h3>Less noise.</h3>
+              <p>
+                Concise summaries that help you understand
+                developments without unnecessary reading.
+              </p>
+            </div>
+
+            <div className="about-principle">
+              <h3>Better discovery.</h3>
+              <p>
+                Stories organised by category, development type,
+                organisation and relevant tags.
+              </p>
+            </div>
+
+            <div className="about-principle">
+              <h3>Sources matter.</h3>
+              <p>
+                Every story points back to its original publisher.
+                Read further and verify the information yourself.
+              </p>
+            </div>
+
+          </div>
+
+          {/* CTA */}
+          <div className="about-cta">
+            <h2>Find your orbit.</h2>
+
+            <Link className="about-cta__link" href="/">
               Browse the latest
-              <ArrowUpRight className="btn__icon" aria-hidden="true" />
+              <ArrowUpRight size={17} aria-hidden="true" />
             </Link>
           </div>
+
         </div>
       </section>
+
     </article>
   );
 }
